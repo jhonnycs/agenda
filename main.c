@@ -26,6 +26,8 @@ void inserirContato(Contato *agenda);
 void buscarPorNome(Contato *agenda);
 void buscarPorEstado(Contato *agenda);
 void exibirContato(Contato *agenda, int posicao);
+void escreverNoArquivo(Contato contato);
+void excluirContato(Contato *agenda);
 
 void exibirContato(Contato *agenda, int posicao) {
     printf("-----------------------------\n");
@@ -232,7 +234,7 @@ int main() {
                 alterarContato(agenda);
                 break;
             case 6:
-                exluirContato(agenda);
+                excluirContato(agenda);
                 break;
             case 7:
                 printf("Saindo.\n");
