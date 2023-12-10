@@ -46,6 +46,7 @@ void exibirContato(Contato *agenda, int posicao) {
 void inserirContato(Contato *agenda) {
     if (qContatos < MAX_CONTATOS) {
         Contato novoContato;
+        novoContato.id = qContatos;
         printf("Nome: ");
         scanf(" %[^\n]s", &novoContato.nome);
         printf("Endereco: ");
