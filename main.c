@@ -8,7 +8,7 @@
 #define TAM_TELEFONE 15
 #define TAM_CELULAR 15
 
-int qContatos = 0;
+#define QUANT_CARACTER_LINE 250
 
 typedef struct {
     int id;
@@ -22,14 +22,17 @@ typedef struct {
     char celular[TAM_CELULAR];
 } Contato;
 
-void inserirContato(Contato *agenda);
-void buscarPorNome(Contato *agenda);
-void buscarPorEstado(Contato *agenda);
-void exibirContato(Contato *agenda, int posicao);
-void escreverNoArquivo(Contato contato);
-void excluirContato(Contato *agenda);
+Contato agenda[MAX_CONTATOS];
+int qContatos = 0;
 
-void exibirContato(Contato *agenda, int posicao) {
+void inserirContato();
+void buscarPorNome();
+void buscarPorEstado();
+void exibirContato(int posicao);
+void escreverNoArquivo(Contato contato);
+void excluirContato();
+
+void exibirContato(int posicao) {
     printf("-----------------------------\n");
     printf("Id: %d\n", agenda[posicao].id);
     printf("Nome: %s\n", agenda[posicao].nome);
@@ -40,41 +43,46 @@ void exibirContato(Contato *agenda, int posicao) {
     printf("CEP: %s\n", agenda[posicao].cep);
     printf("Telefone: %s\n", agenda[posicao].telefone);
     printf("Celular: %s\n", agenda[posicao].celular);
-    printf("-----------------------------\n\n");
 }
 
-void inserirContato(Contato *agenda) {
+Contato lerContato(int id) {
+    Contato contatoLido;
+
+    contatoLido.id = id;
+
+    printf("Nome: ");
+    scanf(" %[^\n]s", contatoLido.nome);
+    printf("Endereco: ");
+    scanf(" %[^\n]s", contatoLido.endereco);
+    printf("Bairro: ");
+    scanf(" %[^\n]s", contatoLido.bairro);
+    printf("Cidade: ");
+    scanf(" %[^\n]s", contatoLido.cidade);
+    printf("Estado: ");    
+    scanf(" %[^\n]s", contatoLido.estado);
+    printf("CEP: ");
+    scanf(" %[^\n]s", contatoLido.cep);
+    printf("Telefone: ");
+    scanf(" %[^\n]s", contatoLido.telefone);
+    printf("Celular: ");
+    scanf(" %[^\n]s", contatoLido.celular);
+    return contatoLido;
+}
+
+void inserirContato() {
     if (qContatos < MAX_CONTATOS) {
         Contato novoContato;
-        novoContato.id = qContatos;
-        printf("Nome: ");
-        scanf(" %[^\n]s", &novoContato.nome);
-        printf("Endereco: ");
-        scanf(" %[^\n]s", &novoContato.endereco);
-        printf("Bairro: ");
-        scanf(" %[^\n]s", &novoContato.bairro);
-        printf("Cidade: ");
-        scanf(" %[^\n]s", &novoContato.cidade);
-        printf("Estado: ");
-        scanf(" %[^\n]s", &novoContato.estado);
-        printf("CEP: ");
-        scanf(" %[^\n]s", &novoContato.cep);
-        printf("Telefone: ");
-        scanf(" %[^\n]s", &novoContato.telefone);
-        printf("Celular: ");
-        scanf(" %[^\n]s", &novoContato.celular);
-
+        novoContato = lerContato(qContatos);
         escreverNoArquivo(novoContato);
         agenda[qContatos] = novoContato;
         qContatos++;
-
         printf("Contato inserido com sucesso!\n");
     } else {
         printf("A agenda está cheia.\n");
     }
 }
 
-void buscarPorNome(Contato *agenda) {
+void buscarPorNome() {
     char nomeBusca[TAM_MAX_STRING];
     printf("Digite o nome para buscar: ");
     scanf(" %[^\n]s", nomeBusca);
@@ -83,7 +91,7 @@ void buscarPorNome(Contato *agenda) {
     int encontrado = 0;
     for (int i = 0; i < qContatos; i++) {
         if (strcmp(agenda[i].nome, nomeBusca) == 0) {
-            exibirContato(agenda, i);
+            exibirContato(i);
             encontrado = 1;
         }
     }
@@ -93,7 +101,7 @@ void buscarPorNome(Contato *agenda) {
     }
 }
 
-void buscarPorCidade(Contato *agenda) {
+void buscarPorCidade() {
     char cidadeBusca[TAM_MAX_STRING];
     printf("Digite a cidade para buscar: ");
     scanf(" %[^\n]s", cidadeBusca);
@@ -102,7 +110,7 @@ void buscarPorCidade(Contato *agenda) {
     int encontrado = 0;
     for (int i = 0; i < qContatos; i++) {
         if (strcmp(agenda[i].cidade, cidadeBusca) == 0) {
-            exibirContato(agenda, i);
+            exibirContato(i);
             encontrado = 1;
         }
     }
@@ -112,7 +120,7 @@ void buscarPorCidade(Contato *agenda) {
     }
 }
 
-void buscarPorEstado(Contato *agenda) {
+void buscarPorEstado() {
     char estadoBusca[TAM_MAX_STRING];
     printf("Digite o estado para buscar: ");
     scanf(" %[^\n]s", estadoBusca);
@@ -121,7 +129,7 @@ void buscarPorEstado(Contato *agenda) {
     int encontrado = 0;
     for (int i = 0; i < qContatos; i++) {
         if (strcmp(agenda[i].estado, estadoBusca) == 0) {
-            exibirContato(agenda, i);
+            exibirContato(i);
             encontrado = 1;
         }
     }
@@ -136,8 +144,8 @@ void escreverNoArquivo(Contato contato) {
     FILE *arquivo = fopen("agenda.txt", "r+");
 
     if (arquivo != NULL) {
-        fseek(arquivo, 0, SEEK_END);    
-        fprintf(arquivo, "%d %s %s %s %s %s %s %s %s\n",
+        fseek(arquivo, 0, SEEK_END);
+        fprintf(arquivo, "%d // %s // %s // %s // %s // %s // %s // %s // %s\n",
                 contato.id,
                 contato.nome,
                 contato.endereco,
@@ -155,89 +163,154 @@ void escreverNoArquivo(Contato contato) {
 }
 
 void lerQuantContatosNoArquivo(FILE *arquivo) {
-    int numeroContatos = 0;
-    char contatoLido[250];
-    while ((fgets(contatoLido, 250, arquivo)) != NULL) {
+    char contatoLido[QUANT_CARACTER_LINE];
+    while ((fgets(contatoLido, QUANT_CARACTER_LINE, arquivo)) != NULL) {
         qContatos++;
     }
-
-    qContatos = numeroContatos;
 }
 
 
-void lerArquivo(FILE *arquivo, Contato contato[]) {
-    
+void lerArquivo(FILE *arquivo) {
+
     lerQuantContatosNoArquivo(arquivo);
 
+    fseek(arquivo, 0, SEEK_SET);
+
     for (int i = 0; i < qContatos; i++) {
-        fscanf(arquivo, "%d %s %s %s %s %s %s %s %s\n",
-            &contato[i].id,
-            &contato->nome,
-            &contato->endereco,
-            &contato->bairro,
-            &contato->cidade,
-            &contato->estado,
-            &contato->cep,
-            &contato->telefone,
-            &contato->celular
+        fscanf(arquivo, "%d // %s // %s // %s // %s // %s // %s // %s // %s\n",
+            &agenda[i].id,
+            agenda[i].nome,
+            agenda[i].endereco,
+            agenda[i].bairro,
+            agenda[i].cidade,
+            agenda[i].estado,
+            agenda[i].cep,
+            agenda[i].telefone,
+            agenda[i].celular
         );
+    }
+    
+}
+
+void listarContatos() {
+    for (int i = 0; i < qContatos; i++) {
+       exibirContato(i);
     }
 }
 
-void alterarContato(Contato *agenda) {
+void escreverContatoPosicao(Contato contato, int posicao) {
+    FILE *arquivo = fopen("agenda.txt", "r+");
 
+    if (arquivo == NULL) {
+        printf("Arquivo não encontrado.");
+    } else {
+
+        char guardarInfoInutil[QUANT_CARACTER_LINE];
+        fseek(arquivo, 0, SEEK_SET);
+
+        for (int i = 0; i < posicao; i++) {
+            fgets(guardarInfoInutil, QUANT_CARACTER_LINE, arquivo);
+        }
+
+        fprintf(arquivo, "%d // %s // %s // %s // %s // %s // %s // %s // %s\n",
+                contato.id,
+                contato.nome,
+                contato.endereco,
+                contato.bairro,
+                contato.cidade,
+                contato.estado,
+                contato.cep,
+                contato.telefone,
+                contato.celular
+            );
+        fclose(arquivo);
+    }
 }
 
-void excluirContato(Contato *agenda) {
+void alterarContato() {
+    int scan;
+    printf("\nDigite o ID do contato a ser alterado:\n");
+    printf("Caso queira voltar para pesquisar, digite um id que não exista:\n");
+    printf("> ");
+    scanf("%d", &scan);
+    if (scan < 0 || scan >= qContatos) {
+        printf(("O id não existe. Voltando"));
+    } else {
+        Contato contatoParaAlterar;
+
+        int contatoEncontrado = 0;
+
+        for (int i = 0; i < qContatos; i++) {
+            if (agenda[i].id == scan) {
+                contatoEncontrado = 1;
+
+                contatoParaAlterar = lerContato(i);
+                agenda[i] = contatoParaAlterar;
+                escreverContatoPosicao(contatoParaAlterar, i);
+                break;
+            }
+        }
+        if (!contatoEncontrado)
+            printf("\nOcorreu um erro. Contato não encontrado\n");
+    }
     
+}
+
+void excluirContato() {
+    int cId;
 }
 
 
 int main() {
-    Contato agenda[MAX_CONTATOS];
+
     int opcao;
 
     FILE *arquivoAgenda = fopen("agenda.txt", "r+");
 
     if (arquivoAgenda == NULL) {
         printf("Não foi possível abrir arquivo de agenda.\n");
+        exit(0);
     } else {
-        lerArquivo(arquivoAgenda, agenda);
+        lerArquivo(arquivoAgenda);
         fclose(arquivoAgenda);
     }
 
     do {
         printf("\n==== Menu ====\n");
         printf("1. Inserir Contato\n");
-        printf("2. Buscar por Nome\n");
-        printf("3. Buscar por Cidade\n");
-        printf("4. Buscar por Estado\n");
-        printf("5. Alterar cadastro\n");
-        printf("6. Excluir cadastro\n");
-        printf("7. Sair\n");
+        printf("2. Listar todos os contatos\n");
+        printf("3. Buscar por Nome\n");
+        printf("4. Buscar por Cidade\n");
+        printf("5. Buscar por Estado\n");
+        printf("6. Alterar cadastro\n");
+        printf("7. Excluir cadastro\n");
+        printf("8. Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
             case 1:
-                inserirContato(agenda);
+                inserirContato();
                 break;
             case 2:
-                buscarPorNome(agenda);
+                listarContatos();
                 break;
             case 3:
-                buscarPorCidade(agenda);
+                buscarPorNome();
                 break;
             case 4:
-                buscarPorEstado(agenda);
+                buscarPorCidade();
                 break;
             case 5:
-                alterarContato(agenda);
+                buscarPorEstado();
                 break;
             case 6:
-                excluirContato(agenda);
+                alterarContato();
                 break;
             case 7:
+                excluirContato();
+                break;
+            case 8:
                 printf("Saindo.\n");
                 exit(0);
                 break;
