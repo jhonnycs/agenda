@@ -26,11 +26,19 @@ typedef struct
 Contato agenda[MAX_CONTATOS];
 int qContatos = 0;
 
+void limparBufferEntrada();
+void exibirContato(int posicao);
+Contato lerContato(int id);
 void inserirContato();
 void buscarPorNome();
+void buscarPorCidade();
 void buscarPorEstado();
-void exibirContato(int posicao);
 void escreverNoArquivo(Contato contato);
+void lerQuantContatosNoArquivo(FILE *arquivo);
+void lerArquivo(FILE *arquivo);
+void listarContatos();
+void escreverTodosOsContatos();
+void alterarContato();
 void excluirContato();
 
 void limparBufferEntrada(){
@@ -87,7 +95,7 @@ void inserirContato(){
     }
     else
     {
-        printf("A agenda est� cheia.\n");
+        printf("A agenda está cheia.\n");
     }
 }
 
@@ -109,7 +117,7 @@ void buscarPorNome(){
 
     if (!encontrado)
     {
-        printf("Contato n�o encontrado.\n");
+        printf("Contato não encontrado.\n");
     }
 }
 
@@ -131,7 +139,7 @@ void buscarPorCidade(){
 
     if (!encontrado)
     {
-        printf("Contato n�o encontrado.\n");
+        printf("Contato não encontrado.\n");
     }
 }
 
@@ -153,7 +161,7 @@ void buscarPorEstado(){
 
     if (!encontrado)
     {
-        printf("Contato n�o encontrado.\n");
+        printf("Contato não encontrado.\n");
     }
 }
 
@@ -177,7 +185,7 @@ void escreverNoArquivo(Contato contato){
     }
     else
     {
-        printf("O arquivo n�o est� dispon�vel");
+        printf("O arquivo não está disponível");
     }
 }
 
@@ -197,7 +205,7 @@ void lerArquivo(FILE *arquivo){
 
     for (int i = 0; i < qContatos; i++)
     {
-        fscanf(arquivo, "%d // %s // %s // %s // %s // %s // %s // %s // %s\n",
+        fscanf(arquivo, "%d // %[^//] // %[^//] // %[^//] // %[^//] // %[^//] // %[^//] // %[^//] // %[^\n]\n",
                &agenda[i].id,
                agenda[i].nome,
                agenda[i].endereco,
@@ -222,7 +230,7 @@ void escreverTodosOsContatos() {
 
     if (arquivo == NULL)
     {
-        printf("Arquivo n�o encontrado.");
+        printf("Arquivo não encontrado.");
     }
     else {
         for (int i = 0; i < qContatos; i++)
@@ -251,7 +259,7 @@ void alterarContato()
     scanf("%d", &scan);
     if (scan < 0 || scan >= qContatos)
     {
-        printf(("O id n�o existe. Voltando"));
+        printf(("O id não existe. Voltando"));
     }
     else
     {
@@ -272,14 +280,14 @@ void alterarContato()
             }
         }
         if (!contatoEncontrado)
-            printf("\nOcorreu um erro. Contato n�o encontrado\n");
+            printf("\nOcorreu um erro. Contato não encontrado\n");
     }
 }
 
 void excluirContato()
 {
     int id;
-    printf("Digite o ID do contato a ser exclu�do: ");
+    printf("Digite o ID do contato a ser excluído: ");
     scanf("%d", &id);
 
     int encontrado = 0;
@@ -317,7 +325,7 @@ int main()
 
     if (arquivoAgenda == NULL)
     {
-        printf("N�o foi poss�vel abrir arquivo de agenda.\n");
+        printf("Não foi possível abrir arquivo de agenda.\n");
         exit(0);
     }
     else
