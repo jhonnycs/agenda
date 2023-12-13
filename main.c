@@ -310,7 +310,7 @@ int main() {
         printf("6. Alterar cadastro\n");
         printf("7. Excluir cadastro\n");
         printf("8. Sair\n");
-        printf("Escolha uma opcao: ");
+        printf("Escolha uma opção: ");
         scanf("%d", &opcao);
         limparBufferEntrada();
 
@@ -341,7 +341,7 @@ int main() {
                 exit(0);
                 break;
             default:
-                printf("Opcao invalida. Tente novamente.\n");
+                printf("Opção invalida. Tente novamente.\n");
         }
 
     } while (1);
